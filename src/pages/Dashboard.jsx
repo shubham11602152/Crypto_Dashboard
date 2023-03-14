@@ -66,6 +66,7 @@ export default class Dashboard extends Component {
         sorter: (a, b) => a.rank - b.rank,
         sortDirections: ["descend"],
         align: "center",
+        responsive: ["sm", "md"],
       },
       {
         title: "Name",
@@ -98,24 +99,28 @@ export default class Dashboard extends Component {
         title: "Market Cap",
         dataIndex: "marketCap",
         key: "marketCap",
+        responsive: ["md"],
         render: (text) => toCurrencyUSD(text),
       },
       {
         title: "VWAP (24Hr)",
         dataIndex: "vwap",
         key: "vwap",
+        responsive: ["lg"],
         render: (text) => toCurrencyUSD(text),
       },
       {
         title: "Supply",
         dataIndex: "supply",
         key: "supply",
+        responsive: ["lg"],
         render: (text) => toSecondDecimal(text),
       },
       {
         title: "Volume (24Hr)",
         dataIndex: "volume",
         key: "volume",
+        responsive: ["md"],
         render: (text) => toCurrencyUSD(text),
       },
       {
@@ -142,7 +147,7 @@ export default class Dashboard extends Component {
         )}
         pagination={false}
         columns={columns}
-        bordered
+        bordered={false}
       />
     );
   }

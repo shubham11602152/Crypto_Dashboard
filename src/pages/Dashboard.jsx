@@ -15,13 +15,16 @@ export default class Dashboard extends Component {
       data: null,
       pageSize: 50,
       currentSize: null,
+      loading: false,
       isDisabledLoadMore: false,
     };
 
     this.handleLoadMore = this.handleLoadMore.bind(this);
+    this.handleLoadingChange = this.handleLoadingChange.bind(this);
   }
-  componentDidMount() {
-    fetch("https://api.coincap.io/v2/assets")
+  async componentDidMount() {
+    this.handleLoadingChange(true);
+    await fetch("https://api.coincap.io/v2/assets")
       .then((response) => response.json())
       .then((data) => {
         //set data & currentSize
@@ -30,6 +33,8 @@ export default class Dashboard extends Component {
           currentSize: this.state.pageSize,
         });
       });
+
+    this.handleLoadingChange(false);
   }
   componentDidUpdate(prevProps, prevState) {
     const { data, currentSize } = this.state;
@@ -40,6 +45,10 @@ export default class Dashboard extends Component {
         this.setState({ isDisabledLoadMore: true });
       }
     }
+  }
+
+  handleLoadingChange(enable) {
+    this.setState({ loading: enable });
   }
 
   handleLoadMore() {
@@ -54,7 +63,7 @@ export default class Dashboard extends Component {
       data: dataSource,
       currentSize,
       isDisabledLoadMore,
-      handleLoadMore,
+      loading,
     } = this.state;
 
     const iconURL = "https://assets.coincap.io/assets/icons";
@@ -131,11 +140,10 @@ export default class Dashboard extends Component {
       },
     ];
 
-    if (!dataSource) return <div className="loader">Loading...</div>;
-
     return (
       <Table
-        dataSource={dataSource.slice(0, currentSize)}
+        loading={loading}
+        dataSource={dataSource?.slice(0, currentSize)}
         footer={() => (
           <Button
             disabled={isDisabledLoadMore}
